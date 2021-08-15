@@ -1,5 +1,5 @@
 const pokupki = "./pokupki.txt";
-const airtravel = "./airtravel.csv";
+const vatSales = "./vatSales.csv";
 
 const convertTextFilesToObjects = (text) => {
     const lines = text.split("\n");
@@ -36,10 +36,11 @@ const fetchTextFiles = (file) => {
     })
     .then(text => {
         const [textObject] = convertTextFilesToObjects(text);
+        
         console.log(textObject)
     })
 }
 document.querySelector("#read-button").addEventListener("click", () => {
-    fetchTextFiles(pokupki)
+    fetchTextFiles(vatSales)
 })
 
