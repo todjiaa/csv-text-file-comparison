@@ -1,0 +1,32 @@
+
+// document.querySelector("#read-button").addEventListener("click", () => {
+
+//     // reader.addEventListener("load", (e) => {
+//     //     const text = e.target.result;
+
+//     //     const lines = text.split("\n");
+
+//     //     let result = [];
+
+//     //     let headers = lines[0].split(",");
+
+//     //     for (let i = 1; i < lines.length; i++) {
+
+//     //         if (!lines[i]) continue;
+
+//     //         let obj = {};
+//     //         let currentLine = lines[i].split(",");
+
+//     //         for (let j = 0; j < headers.length; j++) {
+//     //             obj[headers[j]] = currentLine[j];
+//     //         }
+
+//     //         result.push(obj);
+
+//     //         console.log(obj)
+//     //     }
+
+//     // })
+
+//     // reader.readAsText(file)
+// })
