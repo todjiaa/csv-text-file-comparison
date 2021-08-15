@@ -1,6 +1,13 @@
 const pokupki = "./pokupki.txt";
 const vatSales = "./vatSales.csv";
 
+const airTravel = "./airtravel.csv";
+const airTravel1 = "./airtravel1.csv";
+
+const initialFilesArray = [pokupki, vatSales];
+
+const loadedFilesArray = [];
+
 const convertTextFilesToObjects = (text) => {
     const lines = text.split("\n");
 
@@ -25,6 +32,15 @@ const convertTextFilesToObjects = (text) => {
     ]
 }
 
+const compare = () => {
+    console.log(loadedFilesArray)
+
+    loadedFilesArray.forEach((array, i) => {
+        
+        console.log(array)
+    })
+}
+
 const fetchTextFiles = (file) => {
     fetch(file)
     .then(response => {
@@ -36,11 +52,28 @@ const fetchTextFiles = (file) => {
     })
     .then(text => {
         const [textObject] = convertTextFilesToObjects(text);
-        
-        console.log(textObject)
+
+        loadedFilesArray.push(textObject);
+
+        // console.log(textObject)
     })
 }
+
+const fetchFiles = (files) => {
+    if (typeof files === "object") {
+        files.forEach(file => {
+            fetchTextFiles(file);
+        })
+    }
+    else {
+        fetchTextFiles(files);
+    }
+}
+
 document.querySelector("#read-button").addEventListener("click", () => {
-    fetchTextFiles(vatSales)
+    fetchFiles(initialFilesArray);
 })
 
+document.querySelector("#compare-button").addEventListener("click", () => {
+    compare();
+})

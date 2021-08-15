@@ -1,3 +1,4 @@
+const reader = new FileReader();
 
 // document.querySelector("#read-button").addEventListener("click", () => {
 
