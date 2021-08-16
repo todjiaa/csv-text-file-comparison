@@ -60,11 +60,12 @@ const extractIdFromCsvFile = (file) => {
             return el.replace(/[^a-zA-Z, ^0-9, ^;]/g, "");
         })
         .map(line => {
-            const filtered = line.split(" ").filter(noEmptyStrings)
+
+            const filtered = line.split(";").filter(noEmptyStrings)
             
             console.log(filtered)
 
-            // Can not get the id here!!!
+            // Can not get the id as a constant index here!!!
 
             return filtered;
 
