@@ -36,6 +36,30 @@ const convertTextFilesToObjects = (text) => {
     ]
 }
 
+let finalTextId;
+
+const removeReferenceNumber = (id) => {
+    console.log("full", id)
+
+    if (id[1] === "0" && id[2] === "0") {
+        finalTextId = id.splice(4).join('');
+
+        console.log(finalTextId)
+    }
+
+    else if (id[2] === "0") {
+        finalTextId = id.splice(4).join("");
+
+        console.log(finalTextId)
+    }
+
+    else if (id[1] === "0") {
+        finalTextId = id.splice(3).join("");
+
+        console.log(finalTextId)
+    }
+}
+
 
 const extractIdFromTextFile = (file) => {
     const idFromTextFile = file.map(eachLine => {
@@ -43,11 +67,11 @@ const extractIdFromTextFile = (file) => {
 
             const filtered = el.split(" ").filter(noEmptyStrings);
 
-            console.log(filtered[3])
-
             const idArray = Array.from(filtered[3])
 
-            console.log(idArray)
+            // console.log(idArray)
+
+            removeReferenceNumber(idArray);
 
             return idArray;
         })
