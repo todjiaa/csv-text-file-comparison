@@ -1,0 +1,33 @@
+
+// const fetchTextFiles = (file) => {
+//     fetch(file)
+//     .then(response => {
+//         return response
+//     })
+//     .then(data => {
+//         return data.text();
+//     })
+//     .then(text => {
+//         const [textObject] = convertTextFilesToObjects(text);
+
+//         loadedFilesArray.push(textObject);
+
+//         loadedTextFile = textObject;
+//     })
+// }
+
+// const fetchFiles = (files) => {
+//     if (typeof files === "object") {
+//         files.forEach(file => {
+//             fetchTextFiles(file);
+//         })
+//     }
+//     else {
+//         fetchTextFiles(files);
+//     }
+// }
+
+
+// document.querySelector("#read-button").addEventListener("click", () => {
+//     fetchFiles(pokupki);
+// });

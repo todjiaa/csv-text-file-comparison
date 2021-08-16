@@ -1,12 +1,17 @@
-const pokupki = "./pokupki.txt";
-const vatSales = "./vatSales.csv";
+const textReader = new FileReader();
+const csvReader = new FileReader();
 
-const airTravel = "./airtravel.csv";
-const airTravel1 = "./airtravel1.csv";
+const noEmptyStrings = (value) => {
+    if (typeof(value) !== "") {
+        return value;
+    }
+}
 
-const initialFilesArray = [pokupki, vatSales];
-
-const loadedFilesArray = [];
+const onlyStrings = (value) => {
+    if (typeof(value) === "string" && typeof(value) !== "?" ) {
+        return value;
+    }
+}
 
 const convertTextFilesToObjects = (text) => {
     const lines = text.split("\n");
@@ -15,8 +20,7 @@ const convertTextFilesToObjects = (text) => {
 
     let headers = lines[0].split(",");
 
-    for (let i = 1; i < lines.length; i++) {
-
+    for (let i = 0; i < lines.length; i++) {
         if (!lines[i]) continue;
 
         let obj = {};
@@ -32,48 +36,83 @@ const convertTextFilesToObjects = (text) => {
     ]
 }
 
-const compare = () => {
-    console.log(loadedFilesArray)
 
-    loadedFilesArray.forEach((array, i) => {
-        
-        console.log(array)
-    })
-}
+const extractIdFromTextFile = (file) => {
+    const idFromTextFile = file.map(eachLine => {
+        return Object.values(eachLine).map(el => {
 
-const fetchTextFiles = (file) => {
-    fetch(file)
-    .then(response => {
-        return response
-    })
-    .then(data => {
-        return data.text();
+            const filtered = el.split(" ").filter(noEmptyStrings);
 
-    })
-    .then(text => {
-        const [textObject] = convertTextFilesToObjects(text);
+            const idArray = Array.from(filtered[3])
 
-        loadedFilesArray.push(textObject);
+            console.log(idArray)
 
-        // console.log(textObject)
-    })
-}
-
-const fetchFiles = (files) => {
-    if (typeof files === "object") {
-        files.forEach(file => {
-            fetchTextFiles(file);
+            return idArray;
         })
-    }
-    else {
-        fetchTextFiles(files);
+    })
+    return [idFromTextFile];
+}
+
+const extractIdFromCsvFile = (file) => {
+    const idFromCsvFile = file.map(line => {
+        const array = Object.values(line).filter(onlyStrings)
+        .map(el => {
+            return el.replace(/[^a-zA-Z, ^0-9, ^;]/g, "");
+        })
+        .map(line => {
+            const filtered = line.split(" ").filter(noEmptyStrings)
+            
+            console.log(filtered)
+
+            // Can not get the id here!!!
+
+            return filtered;
+
+        })
+    })
+    return [idFromCsvFile];
+}
+
+const getTextFile = () => {
+    const textFile = document.querySelector(".text-input").files[0];
+
+    if (textFile) {
+        textReader.addEventListener("load", (e) => {
+            const text = e.target.result;
+
+            const [textObject] = convertTextFilesToObjects(text);
+        
+            console.log("text file read")
+            
+            extractIdFromTextFile(textObject);
+        })
+        textReader.readAsText(textFile)
     }
 }
 
-document.querySelector("#read-button").addEventListener("click", () => {
-    fetchFiles(initialFilesArray);
-})
+const getCsvFile = () => {
+    const csvFile = document.querySelector(".csv-input").files[0];
 
-document.querySelector("#compare-button").addEventListener("click", () => {
-    compare();
-})
+    if (csvFile) {
+        csvReader.addEventListener("load", (e) => {
+            const csv = e.target.result;
+
+            const [csvObject] = convertTextFilesToObjects(csv);
+
+            console.log("csv file read")
+
+            extractIdFromCsvFile(csvObject);
+        })
+        csvReader.readAsText(csvFile)
+    }
+}
+
+
+document.querySelector(".get-text-button").addEventListener("click", getTextFile);
+
+document.querySelector(".get-csv-button").addEventListener("click", getCsvFile);
+
+
+// document.querySelector("#compare-button").addEventListener("click", () => {
+//     compare();
+// });
