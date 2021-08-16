@@ -43,6 +43,8 @@ const extractIdFromTextFile = (file) => {
 
             const filtered = el.split(" ").filter(noEmptyStrings);
 
+            console.log(filtered[3])
+
             const idArray = Array.from(filtered[3])
 
             console.log(idArray)
@@ -55,12 +57,11 @@ const extractIdFromTextFile = (file) => {
 
 const extractIdFromCsvFile = (file) => {
     const idFromCsvFile = file.map(line => {
-        const array = Object.values(line).filter(onlyStrings)
+        return Object.values(line).filter(onlyStrings)
         .map(el => {
-            return el.replace(/[^a-zA-Z, ^0-9, ^;]/g, "");
+            return el.replace(/[^a-zA-Z0-9;]/g, "");
         })
         .map(line => {
-
             const filtered = line.split(";").filter(noEmptyStrings)
             
             console.log(filtered)
