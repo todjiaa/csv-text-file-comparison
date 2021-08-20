@@ -8,20 +8,25 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="text-section">
-            <label class="text-label label" for="text-input">Upload Text File</label>
-            <input class="text-input input" id="text-input" type="file" name="" accept=".txt">
-            <button class="get-text-button button">Get Text ID</button>
-        </div>
-        <div class="csv-section">
-            <label class="csv-label label" for="csv-input">Upload CSV File</label>
-            <input class="csv-input input" id="csv-input" type="file" name="" accept=".csv">
-            <button class="get-csv-button button">Get Csv ID</button>
-        </div>
+    <div class="header">
+        <h1>Compare Txt and CSV Files</h1>
     </div>
-
-    <!-- <button id="compare-button">Compare</button> -->
+    <div class="main-wrapper">
+        <div class="inputs-wrapper">
+            <div class="text-section">
+                <label class="text-label label" for="text-input">Upload Text File:</label>
+                <input class="text-input input" id="text-input" type="file" name="" accept=".txt">
+            </div>
+            <div class="csv-section">
+                <label class="csv-label label" for="csv-input">Upload CSV File:</label>
+                <input class="csv-input input" id="csv-input" type="file" name="" accept=".csv">
+            </div>
+        </div>
+        <div class="get-missing-wrapper">
+            <button class="get-missing-button">Get Missing Invoices</button>
+        </div>
+        <div class="missing-invoices-wrapper"></div>
+    </div>
     <script src="main.js" type="module"></script>
 </body>
 </html>

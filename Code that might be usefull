@@ -1,0 +1,142 @@
+
+// const extractIdFromCsvFile = (file) => {
+
+//     // const idFromCsvFile = file.map(line => {
+//     //     console.log(line)
+//     //     return Object.values(line).filter(onlyStrings)
+//     //     .map(el => {
+//     //         return el.replace(/[^a-zA-Z0-9;]/g, "");
+//     //     })
+//     //     .map(line => {
+//     //         const filtered = line.split(";").filter(noEmptyStrings)
+            
+//     //         filteredCsv.push(filtered);
+            
+//     //         // console.log(filteredCsv)
+//     //         // Can not get the id as a constant index here!!!
+
+//     //         // return filtered;
+
+//     //     })
+//     // })
+//     // return [idFromCsvFile];
+
+// }
+
+// const readCsvFile = () => {
+//     const csvFile = document.querySelector(".csv-input").files[0];
+
+//     // if (csvFile) {
+//     //     csvReader.addEventListener("load", (e) => {
+//     //         const csv = e.target.result;
+
+//     //         const [csvObject] = convertTextFilesToArray(csv);
+
+//     //         console.log("csv file read")
+
+//     //         extractIdFromCsvFile(csvObject);
+//     //     })
+//     //     csvReader.readAsText(csvFile)
+//     // }
+// }
+
+
+// const convertTextFilesToArray = (text) => {
+//     const lines = text.split("\n");
+
+//     // let result = [];
+
+//     // let headers = lines[0].split(",");
+
+//     // for (let i = 0; i < lines.length; i++) {
+//     //     if (!lines[i]) continue;
+
+//     //     let obj = {};
+//     //     let currentLine = lines[i].split(",");
+
+//     //     for (let j = 0; j < headers.length; j++) {
+//     //         obj[headers[j]] = currentLine[j];
+//     //     }
+//     //     result.push(obj);
+//     // }
+//     // return [
+//     //     result
+//     // ]
+// }
+
+
+
+// if (csvFile) {
+    //     Papa.parse(csvFile, {
+    //         complete: function(results) {
+    
+    //             extractIdFromCsvFile(results.data);
+    //         }
+    //     });
+    // }
+
+
+    // document.querySelector(".get-text-button").addEventListener("click", readTextFile);
+
+// document.querySelector(".get-csv-button").addEventListener("click", readCsvFile);
+
+
+
+
+
+
+// const extractIdFromTextFile = (file, cellNumber) => {
+//     for (let i = 0; i < file.length; i++) {
+//         if (!file[i][0].startsWith("BG")) continue;
+
+//         const filtered = file[i].join("").split(" ").filter(noEmptyStrings);
+
+//         removeEntryNumberFromTextFileId(Array.from(filtered[cellNumber]));
+//     }
+// }
+
+
+
+// const removeEntryNumberFromTextFileId = (textArray) => {
+//     for (let i = 0; i < textArray.length; i++) {
+//         if (!textArray[i][0]) continue;
+        
+//         const idArray = Array.from(textArray[i][3]);
+
+//         if (idArray[1] === "0" && idArray[2] === "0") {
+//             textFileId.push(idArray.splice(4).join(''));
+//         }
+        
+//         else if (idArray[2] === "0") {
+//             textFileId.push(idArray.splice(4).join(""));
+//         }
+        
+//         else if (idArray[1] === "0") {
+//             textFileId.push(idArray.splice(3).join(""));
+//         }
+//     }
+// }
+
+
+// const removeZeroFromBeginnigOfCsvFileId = (csvArray) => {
+//     const [idArray] = extractIdFromCsvFile(csvArray, 4);
+
+//     const removedZeros = idArray.map(id => {
+//         return Number(id);
+//     })
+//     return [removedZeros];
+// }
+
+
+// const extractIdFromCsvFile = (file, idCellNumber) => {
+//     let csvId = [];
+
+//     for (let i = 0; i < file.length; i++) {
+//         if (!file[i][0].startsWith("BG")) continue;
+        
+//         const filtered = file[i].join(";").replace(/[^a-zA-Z0-9;]/g, "").split(";");
+
+//         csvId.push(filtered[idCellNumber]);
+//     }
+//     return [csvId];
+// }

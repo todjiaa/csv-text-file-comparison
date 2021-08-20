@@ -1,5 +1,12 @@
+const textFileIdCellNumber = 4;
+const csvFileIdCellNumber = 5;
+
+const missingInvoicesWrapper = document.querySelector(".missing-invoices-wrapper");
+
 const textReader = new FileReader();
 const csvReader = new FileReader();
+
+let taskAccomplished = false;
 
 const noEmptyStrings = (value) => {
     if (typeof(value) !== "") {
@@ -7,138 +14,126 @@ const noEmptyStrings = (value) => {
     }
 }
 
-const onlyStrings = (value) => {
-    if (typeof(value) === "string" && typeof(value) !== "?" ) {
-        return value;
+const removeEntryNumberFromTextFileId = (id) => {
+    if (!id) return;
+
+    const idArray = Array.from(id);
+
+    if (idArray[1] === "0" && idArray[2] === "0") {
+        return idArray.splice(4).join('');
+    }
+    
+    else if (idArray[2] === "0") {
+        return idArray.splice(4).join('');
+    }
+    
+    else if (idArray[1] === "0") {
+        return idArray.splice(3).join('');
     }
 }
 
-const convertTextFilesToObjects = (text) => {
-    const lines = text.split("\n");
-
-    let result = [];
-
-    let headers = lines[0].split(",");
-
-    for (let i = 0; i < lines.length; i++) {
-        if (!lines[i]) continue;
-
-        let obj = {};
-        let currentLine = lines[i].split(",");
-
-        for (let j = 0; j < headers.length; j++) {
-            obj[headers[j]] = currentLine[j];
-        }
-        result.push(obj);
-    }
-    return [
-        result
-    ]
+const removeZeroFromBeginnigOfCsvFileId = (id) => {
+    return Number(id).toString();
 }
 
-let finalTextId;
+const convertTextFilesToArray = (text) => {
+    return [text.split("\n").map(line => line.split(" ").filter(noEmptyStrings))];
+}
 
-const removeReferenceNumber = (id) => {
-    console.log("full", id)
-
-    if (id[1] === "0" && id[2] === "0") {
-        finalTextId = id.splice(4).join('');
-
-        console.log(finalTextId)
-    }
-
-    else if (id[2] === "0") {
-        finalTextId = id.splice(4).join("");
-
-        console.log(finalTextId)
-    }
-
-    else if (id[1] === "0") {
-        finalTextId = id.splice(3).join("");
-
-        console.log(finalTextId)
-    }
+const convertCsvFilesToArray = (text) => {
+    return [text.split("\n").map(line => line.split(";"))];
 }
 
 
-const extractIdFromTextFile = (file) => {
-    const idFromTextFile = file.map(eachLine => {
-        return Object.values(eachLine).map(el => {
-
-            const filtered = el.split(" ").filter(noEmptyStrings);
-
-            const idArray = Array.from(filtered[3])
-
-            // console.log(idArray)
-
-            removeReferenceNumber(idArray);
-
-            return idArray;
-        })
-    })
-    return [idFromTextFile];
-}
-
-const extractIdFromCsvFile = (file) => {
-    const idFromCsvFile = file.map(line => {
-        return Object.values(line).filter(onlyStrings)
-        .map(el => {
-            return el.replace(/[^a-zA-Z0-9;]/g, "");
-        })
-        .map(line => {
-            const filtered = line.split(";").filter(noEmptyStrings)
-            
-            console.log(filtered)
-
-            // Can not get the id as a constant index here!!!
-
-            return filtered;
-
-        })
-    })
-    return [idFromCsvFile];
-}
-
-const getTextFile = () => {
+const readTextFile = (callback) => {
     const textFile = document.querySelector(".text-input").files[0];
 
     if (textFile) {
         textReader.addEventListener("load", (e) => {
-            const text = e.target.result;
+            const [textArray] = convertTextFilesToArray(e.target.result);
 
-            const [textObject] = convertTextFilesToObjects(text);
-        
-            console.log("text file read")
-            
-            extractIdFromTextFile(textObject);
+            callback(textArray);
         })
         textReader.readAsText(textFile)
     }
 }
 
-const getCsvFile = () => {
+const readCsvFile = (callback) => {
     const csvFile = document.querySelector(".csv-input").files[0];
 
     if (csvFile) {
         csvReader.addEventListener("load", (e) => {
-            const csv = e.target.result;
+            const [csvArray] = convertCsvFilesToArray(e.target.result);
 
-            const [csvObject] = convertTextFilesToObjects(csv);
-
-            console.log("csv file read")
-
-            extractIdFromCsvFile(csvObject);
+            callback(csvArray);
         })
         csvReader.readAsText(csvFile)
     }
 }
 
+const getCommonLines = (csvArray, textArray) => {
+    const commonLines = [];
 
-document.querySelector(".get-text-button").addEventListener("click", getTextFile);
+    csvArray.forEach(csvLine => {
+        textArray.forEach(textLine => {
+            if (csvLine[csvFileIdCellNumber-1] === textLine[textFileIdCellNumber-1]) {
+                commonLines.push(csvLine);
+            }
+        })
+    })
+    return [commonLines];
+}
 
-document.querySelector(".get-csv-button").addEventListener("click", getCsvFile);
+const removeCommonLines = (first, second) => {
+    const spreaded = [...first, ...second];
 
+    return spreaded.filter(el => {
+        return !(first.includes(el) && second.includes(el));
+    })
+}
 
-// document.querySelector("#compare-button").addEventListener("click", () => {
-//     compare();
-// });
+const fixTextFileId = (textArray) => {
+    textArray.forEach(line => {
+        line[textFileIdCellNumber-1] = removeEntryNumberFromTextFileId(line[textFileIdCellNumber-1]);
+    })
+}
+
+const fixCsvFileId = (csvArray) => {
+    csvArray.forEach(line => {
+        line[csvFileIdCellNumber-1] = removeZeroFromBeginnigOfCsvFileId(line[csvFileIdCellNumber-1]);
+    })
+}
+
+const getMissingInvoicesInCsvFile = () => {
+    if (!taskAccomplished) {
+        readTextFile((textArray) => {
+    
+            fixTextFileId(textArray);
+    
+            readCsvFile((csvArray) => {
+                fixCsvFileId(csvArray);
+    
+                const [commonLines] = getCommonLines(csvArray, textArray);
+    
+                const missingLines = removeCommonLines(csvArray, commonLines);
+    
+                for (let i = 0; i < missingLines.length; i++) {
+                    const missingInvoice = missingLines[i].join('//');
+                    
+                    if (!missingInvoice.startsWith("BG")) continue;
+    
+                    const div = document.createElement("div");
+                    div.className = "missing-invoices";
+                    missingInvoicesWrapper.append(div);
+    
+                    div.innerHTML = "-" + missingInvoice;
+                }
+                taskAccomplished = true;
+            });
+        });
+    }
+}
+
+document.querySelector(".get-missing-button").addEventListener("click", () => {
+    getMissingInvoicesInCsvFile();
+});
