@@ -140,3 +140,18 @@
 //     }
 //     return [csvId];
 // }
+
+
+// const writeMissingInvoices = (missingLines) => {
+//     for (let i = 0; i < missingLines.length; i++) {
+//         const missingInvoice = missingLines[i].join('//');
+        
+//         if (!missingInvoice.startsWith("BG")) continue;
+
+//         const div = document.createElement("div");
+//         div.className = "missing-invoices";
+//         missingInvoicesWrapper.append(div);
+
+//         div.innerHTML = "-" + missingInvoice;
+//     }
+// }

@@ -1,139 +1,72 @@
-const textFileIdCellNumber = 4;
-const csvFileIdCellNumber = 5;
+import { getMissingRowsInCsv } from "./modules/getMissingRowsInCsv.js";
+import { extractOnlyUsableMissingRows } from "./modules/extractOnlyUsableMissingRows.js";
+import { writeMissingInvoices } from "./modules/writeMissingInvoices.js";
+import { hideNotification } from "./modules/showHideNotification.js";
+import { onTxtInputChange, onCsvInputChange } from "./modules/onInputChange.js";
+import { resetSession } from "./modules/resetSession.js";
 
-const missingInvoicesWrapper = document.querySelector(".missing-invoices-wrapper");
+export const txtFileIdCellNumber = 4;
+export const csvFileIdCellNumber = 5;
 
-const textReader = new FileReader();
-const csvReader = new FileReader();
+export const txtFileInput = document.querySelector(".txt-input");
+export const csvFileInput = document.querySelector(".csv-input");
 
-let taskAccomplished = false;
+export const fileNames = {
+    txtFileNames: [],
+    csvFileNames: []
+}
 
-const noEmptyStrings = (value) => {
-    if (typeof(value) !== "") {
-        return value;
+export const files = {
+    txtFilesArray: [],
+    csvFilesArray: []
+}
+
+export const txtUl = document.querySelector(".txt-ul");
+export const csvUl = document.querySelector(".csv-ul");
+
+export let sessionStatus = {
+    completed: false
+};
+
+export const missingInvoicesWrapper = document.querySelector(".missing-invoices-wrapper"); 
+
+export const notificationWrapper = document.querySelector(".notification-wrapper");
+
+const loadingGifWrapper = document.querySelector(".loading-gif-wrapper");
+
+// Init the whole algorithm of comparing both csv and txt files
+const findMissingInvoicesInCsvFile = () => {
+    if (!sessionStatus.completed && txtUl.childElementCount !== 0 && csvUl.childElementCount !== 0) {
+        loadingGifWrapper.classList.add("show-block");
+
+        const txtArray = [].concat.apply([], files.txtFilesArray);
+        const csvArray = [].concat.apply([], files.csvFilesArray);
+
+        const [missingRows] = getMissingRowsInCsv(csvArray, txtArray);
+
+        const [usableMissingRows] = extractOnlyUsableMissingRows(missingRows);
+
+        writeMissingInvoices(usableMissingRows);
+
+        loadingGifWrapper.classList.remove("show-block");
+
+        sessionStatus.completed = true;
     }
 }
 
-const removeEntryNumberFromTextFileId = (id) => {
-    if (!id) return;
+// On change event listener on the txt and csv inputs
+txtFileInput.addEventListener("change", onTxtInputChange);
+csvFileInput.addEventListener("change", onCsvInputChange);
 
-    const idArray = Array.from(id);
-
-    if (idArray[1] === "0" && idArray[2] === "0") {
-        return idArray.splice(4).join('');
-    }
-    
-    else if (idArray[2] === "0") {
-        return idArray.splice(4).join('');
-    }
-    
-    else if (idArray[1] === "0") {
-        return idArray.splice(3).join('');
-    }
-}
-
-const removeZeroFromBeginnigOfCsvFileId = (id) => {
-    return Number(id).toString();
-}
-
-const convertTextFilesToArray = (text) => {
-    return [text.split("\n").map(line => line.split(" ").filter(noEmptyStrings))];
-}
-
-const convertCsvFilesToArray = (text) => {
-    return [text.split("\n").map(line => line.split(";"))];
-}
-
-
-const readTextFile = (callback) => {
-    const textFile = document.querySelector(".text-input").files[0];
-
-    if (textFile) {
-        textReader.addEventListener("load", (e) => {
-            const [textArray] = convertTextFilesToArray(e.target.result);
-
-            callback(textArray);
-        })
-        textReader.readAsText(textFile)
-    }
-}
-
-const readCsvFile = (callback) => {
-    const csvFile = document.querySelector(".csv-input").files[0];
-
-    if (csvFile) {
-        csvReader.addEventListener("load", (e) => {
-            const [csvArray] = convertCsvFilesToArray(e.target.result);
-
-            callback(csvArray);
-        })
-        csvReader.readAsText(csvFile)
-    }
-}
-
-const getCommonLines = (csvArray, textArray) => {
-    const commonLines = [];
-
-    csvArray.forEach(csvLine => {
-        textArray.forEach(textLine => {
-            if (csvLine[csvFileIdCellNumber-1] === textLine[textFileIdCellNumber-1]) {
-                commonLines.push(csvLine);
-            }
-        })
-    })
-    return [commonLines];
-}
-
-const removeCommonLines = (first, second) => {
-    const spreaded = [...first, ...second];
-
-    return spreaded.filter(el => {
-        return !(first.includes(el) && second.includes(el));
-    })
-}
-
-const fixTextFileId = (textArray) => {
-    textArray.forEach(line => {
-        line[textFileIdCellNumber-1] = removeEntryNumberFromTextFileId(line[textFileIdCellNumber-1]);
-    })
-}
-
-const fixCsvFileId = (csvArray) => {
-    csvArray.forEach(line => {
-        line[csvFileIdCellNumber-1] = removeZeroFromBeginnigOfCsvFileId(line[csvFileIdCellNumber-1]);
-    })
-}
-
-const getMissingInvoicesInCsvFile = () => {
-    if (!taskAccomplished) {
-        readTextFile((textArray) => {
-    
-            fixTextFileId(textArray);
-    
-            readCsvFile((csvArray) => {
-                fixCsvFileId(csvArray);
-    
-                const [commonLines] = getCommonLines(csvArray, textArray);
-    
-                const missingLines = removeCommonLines(csvArray, commonLines);
-    
-                for (let i = 0; i < missingLines.length; i++) {
-                    const missingInvoice = missingLines[i].join('//');
-                    
-                    if (!missingInvoice.startsWith("BG")) continue;
-    
-                    const div = document.createElement("div");
-                    div.className = "missing-invoices";
-                    missingInvoicesWrapper.append(div);
-    
-                    div.innerHTML = "-" + missingInvoice;
-                }
-                taskAccomplished = true;
-            });
-        });
-    }
-}
-
-document.querySelector(".get-missing-button").addEventListener("click", () => {
-    getMissingInvoicesInCsvFile();
+// Click event on the "find missing" button that triggers the main function initializing everything 
+document.querySelector(".find-missing-button").addEventListener("click", () => {
+    findMissingInvoicesInCsvFile();
 });
+
+// Click event on the "resetSession" button that triggers the resetSession session function
+document.querySelector(".reset-button").addEventListener("click", () => {
+    resetSession();
+});
+
+// Click event on the "X" span of the notification that triggers the function closing the resetSession notification 
+document.querySelector(".close-notification-wrapper").addEventListener("click", hideNotification);
