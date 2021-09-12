@@ -1,4 +1,4 @@
-import { txtFileIdCellNumber } from "../main.js";
+import { txtFileIdCellNumber } from "./variablesAndFlags.js";
 
 // Remove the automatically generated entry number at the beginning of each txt id which comes from the software that has exported the orifinal txt file
 export const extractTxtFileId = (txtArray) => {

@@ -1,5 +1,5 @@
 import { createElement } from "./createElement.js";
-import { csvUl, sessionStatus } from "../main.js";
+import { csvUl, sessionStatus } from "./variablesAndFlags.js";
 
 // Create a list with the names of the loaded csv files
 export const createCsvInputList = (csvFilesName) => {

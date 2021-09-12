@@ -1,6 +1,6 @@
+import { csvFileInput, fileNames, files, sessionStatus } from "./variablesAndFlags.js";
 import { convertCsvFilesToArray } from "./convertCsvFilesToArray.js";
 import { extractCsvFileId } from "./extractCsvFileId.js";
-import { csvFileInput, fileNames, files, sessionStatus } from "../main.js";
 import { createCsvInputList } from "./createCsvInputList.js";
 import { showNotification } from "./showHideNotification.js";
 
@@ -17,19 +17,18 @@ export const readCsvFile = () => {
 
             createCsvInputList(csvFileInput.files[i].name);
 
-            loadCsvFile(csvReader);
+            loadCsvFile(csvReader, csvFileInput.files[i].name);
         }
         else if (!sessionStatus.completed) {
-            showNotification(`"${csvFileInput.files[i].name}" is already loaded`);
+            showNotification("data-loaded", `"${csvFileInput.files[i].name}" is already loaded`);
         }
-        // csvFileInput.value = null;
     }
 }
 
 // Load the csv files 
-const loadCsvFile = (csvReader) => {
+const loadCsvFile = (csvReader, fileName) => {
     csvReader.addEventListener("load", (e) => {
-        const [csvArray] = convertCsvFilesToArray(e.target.result);
+        const [csvArray] = convertCsvFilesToArray(e.target.result, fileName);
 
         extractCsvFileId(csvArray);
 

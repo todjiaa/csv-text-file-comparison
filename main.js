@@ -4,35 +4,7 @@ import { writeMissingInvoices } from "./modules/writeMissingInvoices.js";
 import { hideNotification } from "./modules/showHideNotification.js";
 import { onTxtInputChange, onCsvInputChange } from "./modules/onInputChange.js";
 import { resetSession } from "./modules/resetSession.js";
-
-export const txtFileIdCellNumber = 4;
-export const csvFileIdCellNumber = 5;
-
-export const txtFileInput = document.querySelector(".txt-input");
-export const csvFileInput = document.querySelector(".csv-input");
-
-export const fileNames = {
-    txtFileNames: [],
-    csvFileNames: []
-}
-
-export const files = {
-    txtFilesArray: [],
-    csvFilesArray: []
-}
-
-export const txtUl = document.querySelector(".txt-ul");
-export const csvUl = document.querySelector(".csv-ul");
-
-export let sessionStatus = {
-    completed: false
-};
-
-export const missingInvoicesWrapper = document.querySelector(".missing-invoices-wrapper"); 
-
-export const notificationWrapper = document.querySelector(".notification-wrapper");
-
-const loadingGifWrapper = document.querySelector(".loading-gif-wrapper");
+import { loadingGifWrapper, txtFileInput, csvFileInput, sessionStatus, txtUl, csvUl, files } from "./modules/variablesAndFlags.js";
 
 // Init the whole algorithm of comparing both csv and txt files
 const findMissingInvoicesInCsvFile = () => {

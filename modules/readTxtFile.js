@@ -1,8 +1,9 @@
+import { txtFileInput, fileNames, files, sessionStatus } from "./variablesAndFlags.js";
 import { convertTxtFilesToArray } from "./convertTxtFilesToArray.js";
 import { extractTxtFileId } from "./extractTxtFileId.js";
-import { txtFileInput, fileNames, files, sessionStatus } from "../main.js";
 import { createTxtInputList } from "./createTxtInputList.js";
 import { showNotification } from "./showHideNotification.js";
+
 
 // Read each txt file, check if the file name exist, if not then create a list of loaded file names, load the files and once loaded convert each file to an array, extract their id's in usable format removing any automatically generated entry numbers from the exporting software of the files and at the end push all into an object called "files" with array property "txtFilesArray".
 export const readTxtFile = () => {
@@ -20,9 +21,8 @@ export const readTxtFile = () => {
             loadTxtFile(txtReader);
         }
         else if (!sessionStatus.completed) {
-            showNotification(`"${txtFileInput.files[i].name}" is already loaded`);
+            showNotification("data-loaded", `"${txtFileInput.files[i].name}" is already loaded`);
         }
-        // txtFileInput.value = null;
     }
 }
 

@@ -1,5 +1,5 @@
 import { createElement } from "./createElement.js";
-import { missingInvoicesWrapper } from "../main.js";
+import { missingInvoicesWrapper } from "./variablesAndFlags.js";
 
 // Write the missing invoices found in the csv file into the DOM. Create a table and import all the elements of the array in single cell. Create a header name of the table with the count of the missing invoices found. Check if any missing invoices and if not create an element notifing for it. 
 export const writeMissingInvoices = (usableMissingRows) => {

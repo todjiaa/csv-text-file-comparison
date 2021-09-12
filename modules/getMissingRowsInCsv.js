@@ -1,4 +1,4 @@
-import { csvFileIdCellNumber, txtFileIdCellNumber } from "../main.js";
+import { csvFileIdCellNumber, txtFileIdCellNumber } from "./variablesAndFlags.js";
 
 // Compare both csv and txt arrays and return those that are missing in the csv array 
 export const getMissingRowsInCsv = (csvArray, textArray) => {

@@ -1,12 +1,12 @@
-import { 
-    sessionStatus, 
+import {
+    sessionStatus,
     txtUl, 
-    csvUl, 
-    txtFileInput, 
-    csvFileInput, 
-    files, 
+    csvUl,
+    txtFileInput,
+    csvFileInput,
+    files,
     fileNames
-} from "../main.js";
+} from "./variablesAndFlags.js";
 
 import { hideNotification } from "./showHideNotification.js";
 
